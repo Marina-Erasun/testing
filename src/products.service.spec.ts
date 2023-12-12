@@ -18,6 +18,7 @@ describe('ProductsController', () => {
   });
 
   describe('root', () => {
+//se testea que los metodos esten definidos
     it('should be defined', () => {
       expect(productsService.create).toBeDefined();
       expect(productsService.delete).toBeDefined();
@@ -25,12 +26,14 @@ describe('ProductsController', () => {
       expect(productsService.findById).toBeDefined();
       expect(productsService.update).toBeDefined();
     });
-    
+
+//se verifica si la función findAll() del servicio devuelve una lista vacía de productos
     it('should not be empty ', () => {
       const products = productsService.findAll();
       expect(products).toEqual([]);
     });
 
+//se testea la creacion de un nuevo producto
     it('should create a new product', () => {
       const newProduct: Product = {
         id: '1',
@@ -46,6 +49,7 @@ describe('ProductsController', () => {
       expect(foundProduct).toEqual(newProduct);
     });
 
+//se verifica el stock no sea negativo, en caso de que asi sea no se creara el registro
     it('should not allow creation of product with negative stock', () => {
       const productWithNegativeStock: Product = {
         id: '8',
@@ -59,6 +63,7 @@ describe('ProductsController', () => {
       expect(result).toBeNull();
     });
   
+//se verifica el precio no sea negativo, en caso de que asi sea no se creara el registro
     it('should not allow creation of product with negative price', () => {
       const productWithNegativePrice: Product = {
         id: '9',
@@ -71,7 +76,8 @@ describe('ProductsController', () => {
       const result = productsService.create(productWithNegativePrice);
       expect(result).toBeNull();
     });
-  });
+ 
+//se testea la actualizacion de un producto existente
     it('should update an existing product', () => {
       const initialProduct: Product = {
         id: '1',
@@ -94,6 +100,7 @@ describe('ProductsController', () => {
       expect(updatedProduct).toEqual(updatedProductData);
     });
 
+//no permite la actualizacion de un registro que no existe
     it('should not update a non-existing product', () => {
       const updatedProductData: Product = {
         id: '1',
@@ -106,6 +113,8 @@ describe('ProductsController', () => {
       const updatedProduct = productsService.update('1', updatedProductData);
       expect(updatedProduct).toBeFalsy();
     });
+
+// testear la eliminacion de un registro
     it('should delete an existing product', () => {
       const productToDelete: Product = {
         id: '1',
@@ -121,8 +130,11 @@ describe('ProductsController', () => {
       expect(deletedProduct).toEqual(productToDelete);
       expect(foundProduct).toBeFalsy();
     });
+
+//no permite eliminar un registro inexistente
     it('should not delete a non-existing product', () => {
       const deletedProduct = productsService.delete('1');
       expect(deletedProduct).toBeFalsy();
     });
   });
+});

@@ -1,3 +1,4 @@
+// se genero la interface
 export interface Product {
   id: string;
   nombre: string;
