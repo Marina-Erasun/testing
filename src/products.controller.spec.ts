@@ -17,10 +17,18 @@ describe('ProductsController', () => {
     productsController = app.get<ProductsController>(ProductsController);
     productsService = app.get<ProductsService>(ProductsService);
   });
+// tests para corroborar que los metodos esten definidos
+it('should be defined', () => {
+  expect(productsService.create).toBeDefined();
+  expect(productsService.delete).toBeDefined();
+  expect(productsService.findAll).toBeDefined();
+  expect(productsService.findById).toBeDefined();
+  expect(productsService.update).toBeDefined();
+});
 
- // prueba para chequear que el metodo findAll nos devuelva un arreglo de productos
+// prueba para chequear que el metodo findAll nos devuelva un arreglo de productos
   it('should return listProducts', () => {
-    // mockeamos datos en un array
+// mockeamos datos en un array
     const result: Product[] = [
       {
         id: '1',
@@ -50,16 +58,16 @@ describe('ProductsController', () => {
         stock: 15,
       },
     ];
-    // con spyOn simulamos el comportamiento del servicio de findAll
+//con spyOn simulamos el comportamiento del metodo findAll en el controlador (funcion establecida en el service)
     jest.spyOn(productsService, 'findAll').mockImplementation(() => result);
-    // esperamos que el resultado del metodo sea igual a los datos mockeados
+//esperamos que el resultado del metodo sea igual a los datos mockeados
     expect(productsController.findAll()).toEqual(result);
   });
 
-  // test para corroborar que el metodo finById nos devuelva el objeto de 
-  //un id especifico, pasado como parametro
+//test para corroborar que el metodo finById nos devuelva el objeto de 
+//un id especifico, pasado como parametro
   it('should return idProducts', () => {
-    // mockeamos un objeto
+//mockeamos un objeto
     const result: Product = {
       id: '1',
       nombre: 'Laptop HP Pavilion',
@@ -68,20 +76,20 @@ describe('ProductsController', () => {
       precio: 899.99,
       stock: 30,
     };
-    // con spyOn simulamos el comportamiento del servicio de findById
+//con spyOn simulamos el comportamiento del metodo findById en el controlador(funcion establecida en el service)
     jest.spyOn(productsService, 'findById').mockImplementation((id: string) => {
       return id === '1' ? result : null;
     });
-     // esperamos que el resultado del metodo sea igual a los datos mockeados
+//esperamos que el resultado del metodo sea igual a los datos mockeados
     expect(productsController.findById('1')).toEqual(result);
-    // aqui pasamos un id distinto al mockeado nos de error, sea nulo
+//aqui si pasamos un id distinto al mockeado, verificamos que el resultado sea nulo,
+//como establecemos en la ternaria citada mas arriba
     expect(productsController.findById('2')).toBeNull();
-    //expect(productsController.findById("2")).toEqual(result);
   });
 
-  // test para corroborar que el metodo create genere un nuevo registro
+//test para corroborar que el metodo create genere un nuevo registro
   it('should create a new product', () => {
-    // pasamos los datos del nuevo registro, producto
+//pasamos los datos del nuevo registro, producto
     const newProduct: Product = {
       id: '7',
       nombre: 'Auriculares inalámbricos Apple AirPods Pro',
@@ -90,17 +98,17 @@ describe('ProductsController', () => {
       precio: 249.0,
       stock: 18,
     };
-     // con spyOn simulamos el comportamiento del servicio de create
+//con spyOn simulamos el comportamiento del metodo create del controlador
     jest.spyOn(productsService, 'create').mockImplementation((product: Product) => {
         return newProduct;
       });
-      // esperamos que el resultado del metodo sea igual a los datos mockeados
+//esperamos que el resultado del metodo sea igual a los datos mockeados
     expect(productsController.create(newProduct)).toEqual(newProduct);
   });
 
-  // test para no poder crear un nuevo registro con stock negativo
+  //test para no poder crear un nuevo registro con stock negativo
   it('should not create product with negative stock', () => {
-     // mockeamos datos del nuevo registro pero con el stock en negativo
+//mockeamos datos del nuevo registro pero con el stock en negativo
     const productWithNegativeStock: Product =  {
       id: '8',
       nombre: 'Batería externa Anker PowerCore',
@@ -109,15 +117,14 @@ describe('ProductsController', () => {
       precio: 49.99,
       stock: -22
     };
-    // con spyOn simulamos el comportamiento del servicio de create
     jest.spyOn(productsService, 'create').mockImplementation((product: Product) => {
       return product.stock >= 0 ? product : null;
     });
-    // esperamos que si el nuevo registro tiene un stock negativo, la respuesta sea null y no se cree.
+//esperamos que si el nuevo registro tiene un stock negativo, la respuesta sea null y no se cree
     expect(productsController.create(productWithNegativeStock)).toBeNull();
   });
 
-  // test para no poder crear un nuevo registro con precio negativo
+  //test para no poder crear un nuevo registro con precio negativo
   it('should not create product with negative price', () => {
      // mockeamos datos del nuevo registro pero con el precio en negativo
     const productWithNegativePrice: Product =  {
@@ -128,7 +135,7 @@ describe('ProductsController', () => {
       precio: -159.95,
       stock: 20
     };
-    // con spyOn simulamos el comportamiento del servicio de create
+    // con spyOn simulamos el comportamiento del metodo create en el controlador
     jest.spyOn(productsService, 'create').mockImplementation((product: Product) => {
       return product.precio >= 0 ? product : null;
     });
@@ -136,7 +143,7 @@ describe('ProductsController', () => {
     expect(productsController.create(productWithNegativePrice)).toBeNull();
   });
   
-  // test para actualizar un registro existente
+  //test para actualizar un registro existente
   it('should update an existing product', () => {
     //registro actualizado
     const updatedProduct: Product = {
@@ -147,7 +154,7 @@ describe('ProductsController', () => {
       precio: 259.0,
       stock: 18,
     };
- // con spyOn simulamos el comportamiento del servicio de update
+ //con spyOn simulamos el comportamiento del metodo update en el controlador
     jest.spyOn(productsService, 'update').mockImplementation((id: string, product: Product) => {
         return id === '7' ? updatedProduct : null;
       });
@@ -180,14 +187,7 @@ describe('ProductsController', () => {
     expect(productsController.delete('9')).toBeNull();
   });
 
-  // tests para corroborar que los metodos esten definidos
-  it('should be defined', () => {
-    expect(productsService.create).toBeDefined();
-    expect(productsService.delete).toBeDefined();
-    expect(productsService.findAll).toBeDefined();
-    expect(productsService.findById).toBeDefined();
-    expect(productsService.update).toBeDefined();
-  });
+  
 
  
 });
